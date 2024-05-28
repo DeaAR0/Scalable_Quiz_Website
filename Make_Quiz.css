@@ -1,0 +1,205 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0e6d6;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #a39384;
+    padding: 20px;
+    color: white;
+}
+
+.header h1 {
+    margin: 0;
+    outline: none;
+}
+
+.answer-type {
+    display: flex;
+    align-items: center;
+}
+
+.answer-type label {
+    margin-right: 10px;
+}
+
+.styled-select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.quiz-container {
+    display: flex;
+    overflow-x: hidden; /* Hide scrollbar */
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    height: 70vh; /* Adjust height as needed */
+    position: relative;
+}
+
+.quiz-page {
+    scroll-snap-align: start;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    padding: 20px;
+    min-width: 600px;
+    max-width: 600px; /* Fixed width for the frame */
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
+}
+
+.question-number {
+    margin-bottom: 20px;
+}
+
+.question-and-image {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* Align items to the same height */
+    margin-bottom: 20px;
+}
+
+.question {
+    flex-grow: 1;
+    margin-right: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 100%; /* Make textarea fill the question section */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.image-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ccc;
+    padding: 20px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    width: 200px;
+    height: 100%;
+    position: relative;
+}
+
+.image-upload img {
+    max-width: 100%;
+    max-height: 100px;
+    cursor: pointer;
+}
+
+.image-upload button {
+    padding: 20px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.answers-section {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px; /* Padding to ensure space between sections */
+}
+
+.answers-section label {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.option-letter {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.editable {
+    color: #888; /* Fainter color for editable text */
+    cursor: text;
+}
+
+.add-option {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 0;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 1.5em;
+    margin: 0 20px;
+}
+
+/* Pagination number */
+#current-question {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Fullscreen modal for image */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.9);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Creation Page</title>
+    <link rel="stylesheet" href="Make_Quiz.css">
+</head>
+<body>
+    <header class="header">
+        <h1 contenteditable="true">Your Quiz Title Here</h1>
+        <div class="answer-type">
+            <label for="answer-type">Answer Type</label>
+            <select id="answer-type" class="styled-select">
+                <option value="multiple-choice">Multiple choice</option>
+                <!-- Add more options here -->
+            </select>
+        </div>
+    </header>
+    
+    <div class="quiz-container" id="quiz-container">
+        <div class="quiz-page">
+            <div class="question-number">
+                <h2>1. <span contenteditable="true">Your Question Here</span></h2>
+            </div>
+            <div class="question-and-image">
+                <div class="question">
+                    <textarea rows="3">Enter your question details here...</textarea>
+                </div>
+                <div class="image-upload">
+                    <input type="file" id="file-input-1" style="display: none;">
+                    <button id="file-button-1" onclick="document.getElementById('file-input-1').click();">Select or drop image here</button>
+                </div>
+            </div>
+            <div class="answers-section">
+                <label><input type="radio" name="answer-1"> <span class="option-letter">A</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-1"> <span class="option-letter">B</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-1"> <span class="option-letter">C</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-1"> <span class="option-letter">D</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <button class="add-option" onclick="addOption(1)">+ Add new option</button>
+            </div>
+        </div>
+
+        <div class="quiz-page">
+            <div class="question-number">
+                <h2>2. <span contenteditable="true">Your Question Here</span></h2>
+            </div>
+            <div class="question-and-image">
+                <div class="question">
+                    <textarea rows="3">Enter your question details here...</textarea>
+                </div>
+                <div class="image-upload">
+                    <input type="file" id="file-input-2" style="display: none;">
+                    <button id="file-button-2" onclick="document.getElementById('file-input-2').click();">Select or drop image here</button>
+                </div>
+            </div>
+            <div class="answers-section">
+                <label><input type="radio" name="answer-2"> <span class="option-letter">A</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-2"> <span class="option-letter">B</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-2"> <span class="option-letter">C</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-2"> <span class="option-letter">D</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <button class="add-option" onclick="addOption(2)">+ Add new option</button>
+            </div>
+        </div>
+
+        <div class="quiz-page">
+            <div class="question-number">
+                <h2>3. <span contenteditable="true">Your Question Here</span></h2>
+            </div>
+            <div class="question-and-image">
+                <div class="question">
+                    <textarea rows="3">Enter your question details here...</textarea>
+                </div>
+                <div class="image-upload">
+                    <input type="file" id="file-input-3" style="display: none;">
+                    <button id="file-button-3" onclick="document.getElementById('file-input-3').click();">Select or drop image here</button>
+                </div>
+            </div>
+            <div class="answers-section">
+                <label><input type="radio" name="answer-3"> <span class="option-letter">A</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-3"> <span class="option-letter">B</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-3"> <span class="option-letter">C</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <label><input type="radio" name="answer-3"> <span class="option-letter">D</span> <span class="editable" contenteditable="true">Answer</span></label>
+                <button class="add-option" onclick="addOption(3)">+ Add new option</button>
+            </div>
+        </div>
+
+        <!-- Add more quiz-page divs as needed -->
+
+    </div>
+
+    <footer class="footer">
+        <button class="nav-button prev" onclick="prevQuestion()">&larr;</button>
+        <span id="current-question">1</span>
+        <button class="nav-button next" onclick="nextQuestion()">&rarr;</button>
+    </footer>
+
+    <div id="fullscreen-modal" class="modal">
+        <span class="close" onclick="closeFullscreen()">&times;</span>
+        <img class="modal-content" id="fullscreen-img">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

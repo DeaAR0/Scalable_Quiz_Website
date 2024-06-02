@@ -94,3 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// Get the progress element
+var progressElement = document.getElementById("progress");
+// Determine the color based on the percentage
+var color;
+if (percentage <= 20) {
+    color = "#632C2C";
+} else if (percentage <= 40) {
+    color = "#A54A4A";
+} else if (percentage <= 60) {
+    color = "#D3A156";
+} else if (percentage <= 80) {
+    color = "#D3B756";
+} else {
+    color = "#93A54A";
+}
+
+// Apply the color to the progress element
+progressElement.style.backgroundColor = color;

@@ -1,0 +1,22 @@
+SUMMARY
+quiz_app.sql = database setup
+server.js = backend server
+package.json = Node.js dependencies
+Dockerfile and docker-compose.yml = containerization
+
+REPLACE
+ 'password' in docker-compose.yml and server.js with the local dmysql root password
+
+
+TO DEPLOY ON DOCKER
+
+1. Build n run docker container
+    docker-compose up-d
+
+2. Access the Application
+    open browser, navigate to http://localhost:3000 to see the app running
+3. access Mysql
+    use Mysql client or command line
+    docker exec -it db mysql -u root -p
+
+

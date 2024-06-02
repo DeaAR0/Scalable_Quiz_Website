@@ -39,11 +39,9 @@ body {
 
 .quiz-container {
     display: flex;
-    overflow-x: hidden; /* Hide scrollbar */
+    overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
     height: 70vh; /* Adjust height as needed */
-    position: relative;
 }
 
 .quiz-page {
@@ -58,7 +56,6 @@ body {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease-in-out; /* Smooth transition */
 }
 
 .question-number {

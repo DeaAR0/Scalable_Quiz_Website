@@ -22,5 +22,49 @@
             <a class="new bold" href="./Make_Quiz.html">Create Quiz</a>
         </nav>
     </header>
+<<<<<<< Updated upstream
+=======
+    
+    <!-- Main Content for Quiz Creation -->
+    <main>
+        <div class="quiz-container" id="quiz-container">
+            <div class="quiz-page">
+                <div class="question-number">
+                    <h2>1. <span contenteditable="true">Your Question Here</span></h2>
+                </div>
+                <div class="question-and-image">
+                    <div class="question">
+                        <textarea rows="3" contenteditable="true">Enter your question details here...</textarea>
+                    </div>
+                    <div class="image-upload">
+                        <input type="file" id="file-input-1" style="display: none;">
+                        <button id="file-button-1" onclick="document.getElementById('file-input-1').click();">Select or drop image here</button>
+                    </div>
+                </div>
+                <div class="answers-section">
+                    <label><input type="radio" name="answer-1"> <span class="option-letter">A</span> <span class="editable" contenteditable="true">Answer</span></label>
+                    <label><input type="radio" name="answer-1"> <span class="option-letter">B</span> <span class="editable" contenteditable="true">Answer</span></label>
+                    <label><input type="radio" name="answer-1"> <span class="option-letter">C</span> <span class="editable" contenteditable="true">Answer</span></label>
+                    <label><input type="radio" name="answer-1"> <span class="option-letter">D</span> <span class="editable" contenteditable="true">Answer</span></label>
+                    <button class="add-option" onclick="addOption(1)">+ Add new option</button>
+                </div>
+            </div>
+            <!-- Add more quiz-page divs as needed -->
+        </div>
+
+        <footer class="footer">
+            <button class="nav-button prev" onclick="prevQuestion()">&larr;</button>
+            <span id="current-question">1</span>
+            <button class="nav-button next" onclick="nextQuestion()">&rarr;</button>
+        </footer>
+
+        <div id="fullscreen-modal" class="modal">
+            <span class="close" onclick="closeFullscreen()">&times;</span>
+            <img class="modal-content" id="fullscreen-img">
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+>>>>>>> Stashed changes
 </body>
 </html>

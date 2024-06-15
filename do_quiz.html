@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do Quiz</title>
+    <link rel="stylesheet" href="./Do_Quiz.css">
+</head>
+<body>
+    <div class="quiz-container" id="quiz-container"></div>
+    <button id="submit-quiz" onclick="submitQuiz()">Submit Quiz</button>
+    <div id="score-popup" class="score-popup"></div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const quizId = urlParams.get('quizId');
+
+        fetch(`http://localhost:3000/getQuiz/${quizId}`)
+            .then(response => response.json())
+            .then(quiz => {
+                if (!quiz) {
+                    alert('Quiz not found');
+                    return;
+                }
+                const quizContainer = document.getElementById('quiz-container');
+                quiz.questions.forEach((question, index) => {
+                    const questionElement = document.createElement('div');
+                    questionElement.classList.add('quiz-page');
+                    questionElement.innerHTML = `
+                        <div class="question-number">
+                            <h2>${index + 1}. ${question.text}</h2>
+                        </div>
+                        <div class="question-details">
+                            <p>${question.details}</p>
+                        </div>
+                        <div class="answers-section">
+                            ${question.options.map((option, i) => `
+                                <label><input type="radio" name="answer-${index}" value="${option}"> ${String.fromCharCode(65 + i)}. ${option}</label>
+                            `).join('')}
+                        </div>
+                    `;
+                    quizContainer.appendChild(questionElement);
+                });
+            });
+
+        function submitQuiz() {
+            let score = 0;
+            const quizPages = document.querySelectorAll('.quiz-page');
+            const userId = 'user123';  // Replace with actual user ID if available
+
+            fetch(`http://localhost:3000/getQuiz/${quizId}`)
+                .then(response => response.json())
+                .then(quiz => {
+                    quizPages.forEach((page, index) => {
+                        const correctAnswer = quiz.questions[index].correctAnswer;
+                        const selectedAnswer = page.querySelector('input[type="radio"]:checked');
+                        if (selectedAnswer && selectedAnswer.value === correctAnswer) {
+                            score += 1;
+                        }
+                    });
+
+                    showScorePopup(score);
+
+                    // Save score to the server
+                    fetch('http://localhost:3000/saveScore', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ quizId, userId, score })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Score saved successfully');
+                        }
+                    });
+                });
+        }
+
+        function showScorePopup(score) {
+            const popup = document.getElementById('score-popup');
+            popup.innerText = `Your score: ${score}`;
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

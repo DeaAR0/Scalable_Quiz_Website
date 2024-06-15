@@ -1,0 +1,14 @@
+config:
+  target: 'http://localhost:3000' # Ensure this matches your server address
+  phases:
+    - duration: 60
+      arrivalRate: 30
+scenarios:
+  - flow:
+      - post:
+          url: "/auth/login"
+          json:
+            email: "test@example.com"
+            password: "password123"
+      - get:
+          url: "/quiz/getQuiz/SGAO0Z" 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <form id="signup-form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+        <br>
+        <button type="submit">Sign Up</button>
+    </form>
+    <p id="error-message"></p>
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const recaptchaResponse = grecaptcha.getResponse();
+
+            const response = await fetch('http://localhost:3000/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password, recaptchaResponse })
+            });
+
+            const data = await response.json();
+            if (data.errors) {
+                document.getElementById('error-message').innerText = data.errors.map(error => error.msg).join(', ');
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Quiz</title>
+    <link rel="stylesheet" href="./Make_Quiz.css">
+</head>
+<body>
+    <h1>Enter Quiz ID</h1>
+    <input type="text" id="quiz-id-input" placeholder="Enter 6-digit Quiz ID">
+    <button onclick="doQuiz()">Do Quiz</button>
+
+    <script>
+        function doQuiz() {
+            const quizId = document.getElementById('quiz-id-input').value;
+            if (quizId) {
+                window.location.href = `do_quiz.html?quizId=${quizId}`;
+            } else {
+                alert('Please enter a valid Quiz ID');
+            }
+        }
+    </script>
+</body>
+</html>

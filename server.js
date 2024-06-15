@@ -1,81 +1,141 @@
 const express = require('express');
-const mysql = require('mysql');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { check, validationResult } = require('express-validator');
 
 const app = express();
-const port = 3000;
-
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// MySQL connection pool for scalability
-const db = mysql.createPool({
-    connectionLimit: 10, // Increase limit for more connections
-    host: 'localhost',
-    user: 'root',
-    password: 'password',  // replace 'password' with actual MySQL root password
-    database: 'quiz_app'
+const dbUri = 'mongodb+srv://claradea7017:quizApp_Scalable@quizapp.3upezjj.mongodb.net/quiz_app?retryWrites=true&w=majority';
+
+mongoose.connect(dbUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('Error connecting to MongoDB', err);
 });
 
-// Save quiz data
-app.post('/save-quiz', (req, res) => {
-    const { title, questions } = req.body;
-    const sqlInsertQuiz = 'INSERT INTO quizzes (title) VALUES (?)';
-    db.query(sqlInsertQuiz, [title], (err, result) => {
-        if (err) return res.status(500).send(err);
-        const quizId = result.insertId;
+const quizSchema = new mongoose.Schema({
+    title: String,
+    questions: [{
+        text: String,
+        details: String,
+        correctAnswer: String,
+        options: [String],
+        image: String
+    }],
+    quizId: { type: String, unique: true }
+});
 
-        questions.forEach((question, index) => {
-            const sqlInsertQuestion = 'INSERT INTO questions (quiz_id, question_text) VALUES (?, ?)';
-            db.query(sqlInsertQuestion, [quizId, question.question_text], (err, result) => {
-                if (err) return res.status(500).send(err);
-                const questionId = result.insertId;
+const userSchema = new mongoose.Schema({
+    email: { type: String, unique: true },
+    password: String
+});
 
-                question.answers.forEach((answer) => {
-                    const sqlInsertAnswer = 'INSERT INTO answers (question_id, answer_text, is_correct) VALUES (?, ?, ?)';
-                    db.query(sqlInsertAnswer, [questionId, answer.answer_text, answer.is_correct], (err, result) => {
-                        if (err) return res.status(500).send(err);
-                    });
-                });
-            });
+const Quiz = mongoose.model('Quiz', quizSchema);
+const User = mongoose.model('User', userSchema);
+
+function generateUniqueId() {
+    return Math.random().toString(36).substr(2, 6).toUpperCase();
+}
+
+const auth = (req, res, next) => {
+    const token = req.header('x-auth-token');
+    if (!token) {
+        return res.status(401).json({ msg: 'No token, authorization denied' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        req.user = decoded.user;
+        next();
+    } catch (err) {
+        res.status(401).json({ msg: 'Token is not valid' });
+    }
+};
+
+app.post('/saveQuiz', auth, async (req, res) => {
+    const quizData = req.body;
+    quizData.quizId = generateUniqueId();
+    const quiz = new Quiz(quizData);
+    await quiz.save();
+    res.send({ success: true, id: quiz.quizId });
+});
+
+app.get('/getQuiz/:id', async (req, res) => {
+    const quiz = await Quiz.findOne({ quizId: req.params.id });
+    res.send(quiz);
+});
+
+app.post('/signup', [
+    check('email').isEmail(),
+    check('password').isLength({ min: 6 })
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    app.post('/saveScore', async (req, res) => {
+        const { quizId, userId, score } = req.body;
+        const scoreData = new Score({ quizId, userId, score });
+        await scoreData.save();
+        res.send({ success: true });
+    });
+    const { email, password } = req.body;
+
+    try {
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+        }
+
+        user = new User({ email, password: bcrypt.hashSync(password, 10) });
+        await user.save();
+
+        const payload = { user: { id: user.id } };
+        jwt.sign(payload, 'secret', { expiresIn: '1h' }, (err, token) => {
+            if (err) throw err;
+            res.json({ token });
         });
-
-        res.send({ message: 'Quiz saved successfully', quizId });
-    });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
-// Fetch quizzes
-app.get('/quizzes', (req, res) => {
-    const sql = 'SELECT * FROM quizzes';
-    db.query(sql, (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.send(results);
-    });
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+        }
+
+        const isMatch = bcrypt.compareSync(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+        }
+
+        const payload = { user: { id: user.id } };
+        jwt.sign(payload, 'secret', { expiresIn: '1h' }, (err, token) => {
+            if (err) throw err;
+            res.json({ token });
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
-// Fetch questions for a quiz
-app.get('/quiz/:quizId/questions', (req, res) => {
-    const { quizId } = req.params;
-    const sql = 'SELECT * FROM questions WHERE quiz_id = ?';
-    db.query(sql, [quizId], (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.send(results);
-    });
-});
-
-// Fetch answers for a question
-app.get('/question/:questionId/answers', (req, res) => {
-    const { questionId } = req.params;
-    const sql = 'SELECT * FROM answers WHERE question_id = ?';
-    db.query(sql, [questionId], (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.send(results);
-    });
-});
-
+const port = 3000;
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });

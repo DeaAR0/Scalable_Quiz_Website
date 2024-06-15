@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Creation Page</title>
+    <link rel="stylesheet" href="./Make_Quiz.css">
+</head>
+<body>
+    <header class="header">
+        <h1 contenteditable="true" id="quiz-title">Your Quiz Title Here</h1>
+        <div class="answer-type">
+            <label for="answer-type">Answer Type</label>
+            <select id="answer-type" class="styled-select">
+                <option value="multiple-choice">Multiple choice</option>
+                <!-- Add more options here -->
+            </select>
+        </div>
+    </header>
+    
+    <div class="quiz-container" id="quiz-container">
+        <!-- Questions will be dynamically added here -->
+    </div>
+
+    <button onclick="addQuestion()">Add Question</button>
+
+    <footer class="footer">
+        <button class="nav-button prev" onclick="prevQuestion()">&larr;</button>
+        <span id="current-question">1</span>
+        <button class="nav-button next" onclick="nextQuestion()">&rarr;</button>
+    </footer>
+
+    <button id="save-quiz" onclick="saveQuiz()">Save Quiz</button>
+
+    <div id="fullscreen-modal" class="modal">
+        <span class="close" onclick="closeFullscreen()">&times;</span>
+        <img class="modal-content" id="fullscreen-img">
+    </div>
+
+    <div id="save-popup" class="save-popup">
+        Quiz Saved! Your Quiz ID is: <span id="quiz-id"></span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
